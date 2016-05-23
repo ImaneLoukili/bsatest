@@ -1,16 +1,24 @@
 
 public class Configuration {
-	
-	private int nbRun; 
-	private int nbItRun; 
-	private int popsize; 
-	private int dim; 
+
+	private int nbRun;
+	private int nbItRun;
+	private int popsize;
+	private int dim;
 	private double mixrate;
-	
-	public Configuration(int nbRun, int nbItRun, int popsize, int dim, double mixrate) {
+
+	public Configuration() {
+		nbRun = 30;
+		nbItRun = (int) (2 * Math.pow(10, 6) / popsize);
+		popsize = 30;
+		dim = 30;
+		mixrate = 0.5;
+	}
+
+	public Configuration(int nbRun, int popsize, int dim, double mixrate) {
 		super();
 		this.nbRun = nbRun;
-		this.nbItRun = nbItRun;
+		nbItRun = (int) (2 * Math.pow(10, 6) / popsize);
 		this.popsize = popsize;
 		this.dim = dim;
 		this.mixrate = mixrate;
@@ -54,12 +62,6 @@ public class Configuration {
 
 	public void setMixrate(double mixrate) {
 		this.mixrate = mixrate;
-	} 
-	
-	
-	
-	
-	
-	
-}
+	}
 
+}
