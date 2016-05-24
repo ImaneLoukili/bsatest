@@ -28,6 +28,11 @@ public class MyAlgorithm {
 		double[][]Map=new double[_setup.getPopsize()][];
 		double[][]T=new double[_setup.getPopsize()][];
 		
+		Vector<Double> fitP=new Vector<Double>();
+		fitP.setSize(_setup.getPopsize());
+		
+		
+		
 		/*, double _upper_cost, double _lower_cost, int randomMutants,
 			int tempMut, double globalMin, int mutT, double globalMinimizer, double runTable
 		this._upper_cost = _upper_cost;
