@@ -1,3 +1,4 @@
+package Metier;
 import java.util.Random;
 import java.util.Vector;
 
@@ -19,14 +20,13 @@ public class Solution {
 		return currentFitness;
 	}
 
-//	public void random(double upper, double lower) {
-//		Random rnd = new Random();
-//		Configuration conf;
-//		dim = conf.getDim();
-//		for (int j = 0; j < dim; j++) {
-//			TabLine.push_back(lower + (upper - lower) *  (double)rnd.nextInt(1));
-//		}
-//	}
+	public void random(double upper, double lower) {
+	Random rnd = new Random();	
+	dim = Configuration.getDim();
+	for (int j = 0; j < dim; j++) {
+		TabLine.add((lower + (upper - lower) * rnd.nextDouble()));
+	}
+	}
 
 	public Vector<Double> getTabLine() {
 		return TabLine;

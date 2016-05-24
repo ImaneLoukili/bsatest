@@ -1,3 +1,4 @@
+package Metier;
 
 public class Problem {
 	private int dim;

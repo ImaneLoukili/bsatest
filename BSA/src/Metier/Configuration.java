@@ -1,10 +1,11 @@
+package Metier;
 
 public class Configuration {
 
 	private int nbRun;
 	private int nbItRun;
 	private int popsize;
-	private int dim;
+	private static int dim;
 	private double mixrate;
 
 	public Configuration() {
@@ -20,7 +21,6 @@ public class Configuration {
 		this.nbRun = nbRun;
 		nbItRun = (int) (2 * Math.pow(10, 6) / popsize);
 		this.popsize = popsize;
-		this.dim = dim;
 		this.mixrate = mixrate;
 	}
 
@@ -48,8 +48,8 @@ public class Configuration {
 		this.popsize = popsize;
 	}
 
-	public int getDim() {
-		return dim;
+	public static int getDim() {
+		return  dim;
 	}
 
 	public void setDim(int dim) {
