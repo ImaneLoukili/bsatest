@@ -15,7 +15,6 @@ public class MyAlgorithm {
 	private Vector<Integer> mutT=new Vector<Integer>();
 	private Vector<Double> globalMinimizer=new Vector<Double>();
 	private Vector<Double> runTable=new Vector<Double>();
-	private Problem pbm;
 	
 	
 	double min;
@@ -24,29 +23,28 @@ public class MyAlgorithm {
 	int i, j;
 	int indexBest;
 	int indexWorst;
-	
+	int id;
 	
 
-	public MyAlgorithm(Solution sol,Configuration _setup) {
+	public MyAlgorithm(Configuration setup,Problem pbm) {
 		
-		this.sol=sol;
-		this._setup = _setup;
-		int t=_setup.getNbRun();
-		this.runTable.setSize(_setup.getNbRun());//_setup.getNbRun();
-		double[][]oldPop=new double[_setup.getDim()][_setup.getPopsize()];
-		double[][]P=new double[_setup.getDim()][_setup.getPopsize()];
-		double[][]Mutant=new double[_setup.getDim()][_setup.getPopsize()];
-		double[][]Map=new double[_setup.getDim()][_setup.getPopsize()];
-		double[][]T=new double[_setup.getDim()][_setup.getPopsize()];
+		this.sol=new Solution(pbm);
+		this._setup = setup;
+		this.runTable.setSize(_setup.getNbRun());
+		double[][]oldPop=new double[_setup.getPopsize()][_setup.getDim()];
+		double[][]P=new double[_setup.getPopsize()][_setup.getDim()];
+		double[][]Mutant=new double[_setup.getPopsize()][_setup.getDim()];
+		double[][]Map=new double[_setup.getPopsize()][_setup.getDim()];
+		double[][]T=new double[_setup.getPopsize()][_setup.getDim()];
 		
 		Vector<Double> fitP=new Vector<Double>();
 		fitP.setSize(_setup.getPopsize());
 		Vector<Double> fitT=new Vector<Double>();
 		fitT.setSize(_setup.getPopsize());
 		
-		this.globalMinimizer.setSize(_setup.getDim());
-		this.mutT.setSize(_setup.getDim());
-		
+		globalMinimizer.setSize(_setup.getDim());
+		mutT.setSize(_setup.getDim());
+		sol.random(pbm.UpperLimit, pbm.LowerLimit);
 		_lower_cost=sol.fitness(sol.TabLine);
 		_upper_cost=_lower_cost;
 		
@@ -60,9 +58,9 @@ public class MyAlgorithm {
 			for(i=0;i<_setup.getPopsize();i++){
 				
 				sol.TabLine.clear();
-				//sol.rand();
+				sol.random(pbm.UpperLimit, pbm.LowerLimit);
 				
-				for(j=0;j<_setup.getPopsize();j++){
+				for(j=0;j<_setup.getDim();j++){
 					P[i][j]=sol.TabLine.elementAt(j);
 					oldPop[i][j]=sol.TabLine.elementAt(j);
 				}
@@ -75,10 +73,11 @@ public class MyAlgorithm {
 			for(int k=0;k<_setup.getNbItRun();k++){
 				min=fitP.elementAt(0);
 				max=fitP.elementAt(0);
+			
 				
-				int id = 0;
 				
 				for(i=0;i<_setup.getPopsize();i++){
+					//int id=0;
 					if(fitP.elementAt(i)==fitP.elementAt(0)){
 						_lower_cost=fitP.elementAt(0);
 						_upper_cost=fitP.elementAt(0);
@@ -121,7 +120,8 @@ public class MyAlgorithm {
 				double c=rnd.nextDouble();
 				double d=rnd.nextDouble();
 				
-	//SELECTION1			
+	//SELECTION1
+				//&PERMUTATION
 				for (i = 0; i < _setup.getPopsize(); i++)
 				{
 					for (j = 0; j < _setup.getDim(); j++)
@@ -130,14 +130,7 @@ public class MyAlgorithm {
 						{
 							oldPop[i][j] = P[i][j];
 						}
-					}
-				}
-	//PERMUTATION
-				for (i = 0; i < _setup.getPopsize(); i++)
-				{
-					for (j = 0; j < _setup.getDim() / 2; j++)
-					{
-						
+
 						int randA=rnd.nextInt(_setup.getPopsize()-1);
 						int randB=rnd.nextInt(_setup.getPopsize()-1);
 
@@ -146,21 +139,22 @@ public class MyAlgorithm {
 						temp=oldPop[randA][j];
 						oldPop[randA][j]=oldPop[randB][j];
 						oldPop[randB][j]=temp;
-						
 					}
 				}
+	
+				
 				
 	//Mutation 
 				
 				double F;
 				
+				
 				for (i = 0; i < _setup.getPopsize(); i++)
 				{
 					for (j = 0; j < _setup.getDim(); j++)
 					{
-						//F = 3 * distribution(generator);
-
-						//Mutant[i][j] = P[i][j] + ((oldPop[i][j] - P[i][j]) * F);
+						F = 3 * rnd.nextDouble();
+						Mutant[i][j] = P[i][j] + ((oldPop[i][j] - P[i][j]) * F);
 					}
 				}
 				
@@ -184,7 +178,7 @@ public class MyAlgorithm {
 						tempMut =rnd.nextInt(_setup.getDim()-1);
 						for (j = 1; j <= randomMutants; j++)
 						{
-							while ( mutT!=null)
+							while (Exists(tempMut)&&mutT!=null)
 							{
 								tempMut =rnd.nextInt(_setup.getDim()-1);
 							}
@@ -194,17 +188,17 @@ public class MyAlgorithm {
 						}
 					}
 				}
+				////////////////////////////
 				
-				
-				else{
+			else{
 					int randi;
 					for(i=0;i<_setup.getPopsize();i++){
-						randi=rnd.nextInt(_setup.getDim()-1);
+						randi=rnd.nextInt(_setup.getDim()-1);  // else petite (Pseudo-code)
 						Map[i][randi]=0;
 						
 					}	
 				}
-				
+				/////////  
 				for (i = 0; i < _setup.getPopsize(); i++)
 				{
 					for (j = 0; j < _setup.getDim(); j++)
@@ -272,7 +266,7 @@ public class MyAlgorithm {
 				}
 				
 				
-			   }//k
+			   }//fin k
 			
 			//cout << "Meilleur individu : " << indexBest << endl;
 			for (j = 0; j < _setup.getDim(); j++)
@@ -315,20 +309,7 @@ public class MyAlgorithm {
 		
 		deviation = Math.sqrt(variance);
 		System.out.println("Ecart-type "+deviation);
-		
-		for (i = 0; i < _setup.getDim(); ++i) {
-			
-		}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+						
 			
 			}
 		

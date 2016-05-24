@@ -9,6 +9,11 @@ public class Solution {
 	private int dim;
 	private Problem pbm;
 
+	public Solution(Problem pbm){
+		this.pbm=pbm;
+	}
+	
+	
 	public Solution(double currentFitness, int dim, Problem pbm) {
 		super();
 		this.currentFitness = currentFitness;
@@ -21,8 +26,9 @@ public class Solution {
 	}
 
 	public void random(double upper, double lower) {
+	Configuration conf = new Configuration();
 	Random rnd = new Random();	
-	dim = Configuration.getDim();
+	dim = conf.getDim();
 	for (int j = 0; j < dim; j++) {
 		TabLine.add((lower + (upper - lower) * rnd.nextDouble()));
 	}
@@ -75,7 +81,7 @@ public class Solution {
 
 		case 4: // Weierstrass
 
-			int i = 0;
+		
 			double a, b;
 			int k_max;
 			a = 0.5;

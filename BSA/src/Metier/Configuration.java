@@ -5,7 +5,7 @@ public class Configuration {
 	private int nbRun;
 	private int nbItRun;
 	private int popsize;
-	private static int dim;
+	private  int dim;
 	private double mixrate;
 
 	public Configuration() {
@@ -48,7 +48,7 @@ public class Configuration {
 		this.popsize = popsize;
 	}
 
-	public static int getDim() {
+	public int getDim() {
 		return  dim;
 	}
 
