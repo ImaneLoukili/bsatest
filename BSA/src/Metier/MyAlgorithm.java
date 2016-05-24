@@ -15,6 +15,8 @@ public class MyAlgorithm {
 	private Vector<Integer> mutT=new Vector<Integer>();
 	private Vector<Double> globalMinimizer=new Vector<Double>();
 	private Vector<Double> runTable=new Vector<Double>();
+	private Problem pbm;
+	
 	
 	double min;
 	double max;
@@ -24,7 +26,7 @@ public class MyAlgorithm {
 	int indexWorst;
 	
 	
-	
+
 	public MyAlgorithm(Solution sol,Configuration _setup) {
 		
 		this.sol=sol;
@@ -174,18 +176,149 @@ public class MyAlgorithm {
 				
 				randomMutants = (int)Math.ceil(_setup.getMixrate() * _setup.getDim() * a);
 				
+				if (c < d)
+				{
+					for (i = 0; i < _setup.getPopsize(); i++)
+					{
+						
+						tempMut =rnd.nextInt(_setup.getDim()-1);
+						for (j = 1; j <= randomMutants; j++)
+						{
+							while ( mutT!=null)
+							{
+								tempMut =rnd.nextInt(_setup.getDim()-1);
+							}
+							mutT.setElementAt(tempMut, j);
+							int m=mutT.get(j);
+							Map[i][m]=0;
+						}
+					}
+				}
 				
 				
+				else{
+					int randi;
+					for(i=0;i<_setup.getPopsize();i++){
+						randi=rnd.nextInt(_setup.getDim()-1);
+						Map[i][randi]=0;
+						
+					}	
+				}
+				
+				for (i = 0; i < _setup.getPopsize(); i++)
+				{
+					for (j = 0; j < _setup.getDim(); j++)
+					{
+						T[i][j] = Mutant[i][j];
+					}
+				}
+				
+				for (i = 0; i < _setup.getPopsize(); i++)
+				{
+					for (j = 0; j < _setup.getDim(); j++)
+					{
+						if (Map[i][j] == 1)
+						{
+							T[i][j] = P[i][j];
+						}
+					}
+				}
+				
+	//Boundary Control
+				for (i = 0; i < _setup.getPopsize(); i++)
+				{
+					sol.TabLine.clear();
+
+					for (j = 0; j < _setup.getDim(); j++)
+					{
+						if (T[i][j] < pbm.LowerLimit || T[i][j] > pbm.UpperLimit)
+						{
+							T[i][j] = pbm.LowerLimit + (pbm.UpperLimit - pbm.LowerLimit) * rnd.nextDouble();
+						}
+						sol.TabLine.add(T[i][j]);
+					}
+					fitT.setElementAt(sol.fitness(sol.TabLine), i);
+				}
+	//Selection 2
+				for (i = 0; i < _setup.getPopsize(); i++)
+				{
+					for (j = 0; j < _setup.getDim(); j++)
+					{
+
+						if (fitT.elementAt(i) < fitP.elementAt(i))
+						{
+							P[i][j] = T[i][j];
+							fitP.setElementAt(fitT.elementAt(i), i);
+						}
+					}
+
+				}
+				
+				fitBest = best_cost();
+				
+				if (fitBest <= globalMin)
+				{
+					globalMin = fitBest;
+					for (i = 0; i < _setup.getPopsize(); i++)
+					{
+						for (j = 0; j < _setup.getDim(); j++)
+						{
+							if (i == indexBest)
+							{
+								globalMinimizer.setElementAt(P[i][j], j);
+							}
+						}
+					}
+				}
 				
 				
-				
-			      
-			    }
-				
-				
-				
-			}
+			   }//k
 			
+			//cout << "Meilleur individu : " << indexBest << endl;
+			for (j = 0; j < _setup.getDim(); j++)
+			{
+				//cout << globalMinimizer[j] << " ";
+			}
+			//cout << endl;
+
+			runTable.setElementAt(globalMin, r);;
+
+			//
+			//file.open("result.txt", ios::app);
+			//file << "IndexBest:" << indexBest << endl;
+			//file << "BestFitness:" << fitBest << endl << endl;
+			//file.close();
+
+		} // fin r 
+		
+		double sum = 0.0;
+		double mean = 0.0;
+		double temp = 0.0;
+		double variance = 0.0;
+		double deviation = 0.0;
+				
+		
+		for (i = 0; i < _setup.getNbRun(); i++)
+		{
+			sum += runTable.elementAt(i);
+		}
+		
+		mean = sum / _setup.getNbRun();
+		System.out.println("Moyenne"+mean);
+		
+		for (i = 0; i < _setup.getNbRun(); i++)
+		{
+			temp += Math.pow((runTable.elementAt(i) - mean), 2);
+		}
+		variance = temp / _setup.getNbRun();
+		System.out.println("Variance"+variance);
+		
+		deviation = Math.sqrt(variance);
+		System.out.println("Ecart-type "+deviation);
+		
+		for (i = 0; i < _setup.getDim(); ++i) {
+			
+		}
 			
 			
 			
@@ -205,4 +338,16 @@ public class MyAlgorithm {
 	public double worst_cost(){
 		return _upper_cost;
 	}
+	
+	public boolean Exists(int tempM)
+	{
+		int j;
+		for (j = 1; j <= randomMutants; j++)
+		{
+			if (mutT.elementAt(j).equals(tempM))
+				return true;
+		}
+		return false;
+	}
+	
 }
