@@ -37,6 +37,7 @@ public class MyAlgorithm {
 		double[][]Map=new double[_setup.getPopsize()][_setup.getDim()];
 		double[][]T=new double[_setup.getPopsize()][_setup.getDim()];
 		
+		
 		Vector<Double> fitP=new Vector<Double>();
 		fitP.setSize(_setup.getPopsize());
 		Vector<Double> fitT=new Vector<Double>();
@@ -322,10 +323,10 @@ public class MyAlgorithm {
 	
 	public boolean Exists(int tempM)
 	{
-		int j;
-		for (j = 1; j <= randomMutants; j++)
+		
+		for (int j = 1; j <= randomMutants; j++)
 		{
-			if (mutT.elementAt(j).equals(tempM))
+			if (mutT.get(j).equals(tempM))
 				return true;
 		}
 		return false;
